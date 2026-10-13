@@ -1,0 +1,1910 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <title>blu</title>
+  <link rel="stylesheet" type="text/css" href="home.css">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1">
+  <link rel="icon" href="/favicon.png" type="image/x-icon">
+
+  <script>
+    function tb8_makeArray(n) {
+      this.length = n;
+      return this.length;
+    }
+    tb8_messages = new tb8_makeArray(1);
+    tb8_messages[0] = "bluecaet"
+    tb8_rptType = 'infinite';
+    tb8_rptNbr = 5;
+    tb8_speed = 220;
+    tb8_delay = 1000;
+    href = "https://bluecaet.neocities.org/"
+    var tb8_counter = 1;
+    var tb8_currMsg = 0;
+    var tb8_tekst = "";
+    var tb8_i = 0;
+    var tb8_TID = null;
+
+    function tb8_pisi() {
+      tb8_tekst = tb8_tekst + tb8_messages[tb8_currMsg].substring(tb8_i, tb8_i + 1);
+      document.title = tb8_tekst;
+      tb8_sp = tb8_speed;
+      tb8_i++;
+      if (tb8_i == tb8_messages[tb8_currMsg].length) {
+        tb8_currMsg++;
+        tb8_i = 0;
+        tb8_tekst = "";
+        tb8_sp = tb8_delay;
+      }
+      if (tb8_currMsg == tb8_messages.length) {
+        if ((tb8_rptType == 'finite') && (tb8_counter == tb8_rptNbr)) {
+          clearTimeout(tb8_TID);
+          return;
+        }
+        tb8_counter++;
+        tb8_currMsg = 0;
+      }
+      tb8_TID = setTimeout("tb8_pisi()", tb8_sp);
+    }
+    tb8_pisi()
+  </script>
+
+  <style>
+    * {
+      cursor: url(https://64.media.tumblr.com/tumblr_m2umkqvNUT1qfamg6.gif), auto !important;
+    }
+
+    <a href="https://www.cursors-4u.com/cursor/2011/10/19/tiny-hand-bow-red-heart.html"target="_blank"title="Tiny Hand Bow Red Heart"><img src="https://cur.cursors-4u.net/cursor.png"border="0"alt="Tiny Hand Bow Red Heart"style="display: none; position:absolute; top: 0px; right: 0px;"/></a>
+  </style>
+  <script src="https://iframe.chat/scripts/main.min.js"></script>
+
+  <script type="text/javascript">
+    // <![CDATA[
+    var sparks = 3; // how many sparks per clicksplosion
+    var speed = 25; // how fast - smaller is faster
+    var bangs = 3; // how many can be launched simultaneously (note that using too many can slow the script down)
+    var colours = new Array('#b38a5d');
+    //                     blue    red     green   purple  cyan    orange  pink
+    /****************************
+     *   Clicksplosion Effect    *
+     *(c)2012-3 mf2fm web-design *
+     *  http://www.mf2fm.com/rv  *
+     * DON'T EDIT BELOW THIS BOX *
+     ****************************/
+    var intensity = new Array();
+    var Xpos = new Array();
+    var Ypos = new Array();
+    var dX = new Array();
+    var dY = new Array();
+    var stars = new Array();
+    var decay = new Array();
+    var timers = new Array();
+    var swide = 800;
+    var shigh = 600;
+    var sleft = sdown = 0;
+    var count = 0;
+
+    function addLoadEvent(funky) {
+      var oldonload = window.onload;
+      if (typeof(oldonload) != 'function') window.onload = funky;
+      else window.onload = function() {
+        if (oldonload) oldonload();
+        funky();
+      }
+    }
+    addLoadEvent(clicksplode);
+
+    function clicksplode() {
+      if (document.getElementById) {
+        var i, j;
+        window.onscroll = set_scroll;
+        window.onresize = set_width;
+        document.onclick = eksplode;
+        set_width();
+        set_scroll();
+        for (i = 0; i < bangs; i++)
+          for (j = sparks * i; j < sparks + sparks * i; j++) {
+            stars[j] = createDiv('+', 13);
+            document.body.appendChild(stars[j]);
+          }
+      }
+    }
+
+    function createDiv(char, size) {
+      var div, sty;
+      div = document.createElement('div');
+      sty = div.style;
+      sty.font = size + 'px monospace';
+      sty.position = 'absolute';
+      sty.backgroundColor = 'transparent';
+      sty.visibility = 'hidden';
+      sty.zIndex = '101';
+      div.appendChild(document.createTextNode(char));
+      return (div);
+    }
+
+    function bang(N) {
+      var i, Z, A = 0;
+      for (i = sparks * N; i < sparks * (N + 1); i++) {
+        if (decay[i]) {
+          Z = stars[i].style;
+          Xpos[i] += dX[i];
+          Ypos[i] += (dY[i] += 1.25 / intensity[N]);
+          if (Xpos[i] >= swide || Xpos[i] < 0 || Ypos[i] >= shigh + sdown || Ypos[i] < 0) decay[i] = 1;
+          else {
+            Z.left = Xpos[i] + 'px';
+            Z.top = Ypos[i] + 'px';
+          }
+          if (decay[i] == 15) Z.fontSize = '3px';
+          else if (decay[i] == 7) Z.fontSize = '2px';
+          else if (decay[i] == 1) Z.visibility = 'hidden';
+          decay[i]--;
+        } else A++;
+      }
+      if (A != sparks) timers[N] = setTimeout('bang(' + N + ')', speed);
+    }
+
+    function eksplode(e) {
+      var x, y, i, M, Z, N;
+      set_scroll();
+      y = (e) ? e.pageY : event.y + sdown;
+      x = (e) ? e.pageX : event.x + sleft;
+      N = ++count % bangs;
+      M = Math.floor(Math.random() * 3 * colours.length);
+      intensity[N] = 5 + Math.random() * 4;
+      for (i = N * sparks; i < (N + 1) * sparks; i++) {
+        Xpos[i] = x;
+        Ypos[i] = y - 5;
+        dY[i] = (Math.random() - 0.5) * intensity[N];
+        dX[i] = (Math.random() - 0.5) * (intensity[N] - Math.abs(dY[i])) * 1.25;
+        decay[i] = 16 + Math.floor(Math.random() * 16);
+        Z = stars[i].style;
+        if (M < colours.length) Z.color = colours[i % 2 ? count % colours.length : M];
+        else if (M < 2 * colours.length) Z.color = colours[count % colours.length];
+        else Z.color = colours[i % colours.length];
+        Z.fontSize = '10px';
+        Z.visibility = 'visible';
+      }
+      clearTimeout(timers[N]);
+      bang(N);
+    }
+
+    function set_width() {
+      var sw_min = 999999;
+      var sh_min = 999999;
+      if (document.documentElement && document.documentElement.clientWidth) {
+        if (document.documentElement.clientWidth > 0) sw_min = document.documentElement.clientWidth;
+        if (document.documentElement.clientHeight > 0) sh_min = document.documentElement.clientHeight;
+      }
+      if (typeof(self.innerWidth) == 'number' && self.innerWidth) {
+        if (self.innerWidth > 0 && self.innerWidth < sw_min) sw_min = self.innerWidth;
+        if (self.innerHeight > 0 && self.innerHeight < sh_min) sh_min = self.innerHeight;
+      }
+      if (document.body.clientWidth) {
+        if (document.body.clientWidth > 0 && document.body.clientWidth < sw_min) sw_min = document.body.clientWidth;
+        if (document.body.clientHeight > 0 && document.body.clientHeight < sh_min) sh_min = document.body.clientHeight;
+      }
+      if (sw_min == 999999 || sh_min == 999999) {
+        sw_min = 800;
+        sh_min = 600;
+      }
+      swide = sw_min - 7;
+      shigh = sh_min - 7;
+    }
+
+    function set_scroll() {
+      if (typeof(self.pageYOffset) == 'number') {
+        sdown = self.pageYOffset;
+        sleft = self.pageXOffset;
+      } else if (document.body && (document.body.scrollTop || document.body.scrollLeft)) {
+        sdown = document.body.scrollTop;
+        sleft = document.body.scrollLeft;
+      } else if (document.documentElement && (document.documentElement.scrollTop || document.documentElement.scrollLeft)) {
+        sleft = document.documentElement.scrollLeft;
+        sdown = document.documentElement.scrollTop;
+      } else {
+        sdown = 0;
+        sleft = 0;
+      }
+    }
+    // ]]>
+  </script>
+
+  </head><body><div class="maincontainer">
+
+    <!-- FC2 Clap tag starts here -->
+    <a href="//clap.fc2.com/post/bluecaet/?url=https%3A%2F%2Fbluecaet.neocities.org%2Fhome&amp;title=Bluecaet" target="_blank" title="Web Clap by FC2"><img src="https://files.catbox.moe/9l9pjd.png" alt="Web Clap by FC2" style="border:none; margin-top: 10px; margin-left: 615px; position: absolute;"></a>
+    <!-- FC2 Clap tag ends here -->
+
+    <!-- FC2 Counter  Starts here -->
+    <div class="counter">
+
+      <script language="javascript" type="text/javascript" src="//counter1.fc2.com/counter.php?id=40325304&amp;main=1"></script><a href="https://counter.fc2.com/" rel="noopener" target="_blank"><span><nobr><img border="0" src="https://counter1-cdn-ssl.fc2.com/cimg/66/00090966/6.gif" alt="FC2無料カウンター" "="" title="FC2無料カウンター" style="display:inline;margin:0px;padding:0px;border:none;"><img border="0" src="https://counter1-cdn-ssl.fc2.com/cimg/66/00090966/8.gif" alt="FC2無料カウンター" "="" title="FC2無料カウンター" style="display:inline;margin:0px;padding:0px;border:none;"><img border="0" src="https://counter1-cdn-ssl.fc2.com/cimg/66/00090966/2.gif" alt="FC2無料カウンター" "="" title="FC2無料カウンター" style="display:inline;margin:0px;padding:0px;border:none;"><img border="0" src="https://counter1-cdn-ssl.fc2.com/cimg/66/00090966/9.gif" alt="FC2無料カウンター" "="" title="FC2無料カウンター" style="display:inline;margin:0px;padding:0px;border:none;"></nobr><span></span></span></a><script src="https://counter1.fc2.com/counter_js.php?id=40325304&amp;main=1&amp;lang=0&amp;visitor=2" charset="UTF-8"></script><noscript>&lt;img src="//counter1.fc2.com/counter_img.php?id=40325304&amp;main=1" alt="counter" /&gt;</noscript>
+
+    </div>
+    <!-- FC2 Counter  Ends here -->
+
+    <div class="mainborder">
+      <div class="container">
+        <div class="leftcontainer">
+
+          <div class="miniprofile">
+            <span style="background: #eef2fb; border radius: 2px;">about me:</span> eli <img src="https://bluecaet.neocities.org/resources02/staricon.png" class="staricon" alt="star icon">
+            she / her
+            <p><u>19</u> years old , infp (introverted girl) cat and bunny lover , big fan of pastries and polka dots <i>!</i>
+
+            </p><p><a href="https://bluecaet.neocities.org/neighbours" class="bluecaetbutton">
+                add my button
+              </a>
+
+              <img src="https://bluecaet.neocities.org/resources02/hearticon.png" class="hearticon" alt="heart icon">
+
+              <a href="https://bluecaet.neocities.org/neighbours" class="email">
+                email me
+              </a>
+            </p>
+
+          </div>
+
+          <div class="navigation">
+            navigation
+          </div>
+
+          <p><a href="https://bluecaet.neocities.org/" class="button1">
+              home
+            </a> </p>
+
+          <p><a href="https://bluecaet.neocities.org/diary" class="button2">
+              diary
+            </a> </p>
+
+          <p><a href="https://bluecaet.neocities.org/aboutme" class="button3">
+              about me
+            </a> </p>
+
+          <p><a href="https://bluecaet.neocities.org/credits" class="button4">
+              credits
+            </a> </p>
+
+          <p><a href="https://bluecaet.neocities.org/cliques" class="button5">
+              my cliques
+            </a> </p>
+
+          <div class="offsite">
+            off-site
+          </div>
+
+          <p><a href="https://pin.it/4VFrKNFF0" class="button6">
+              pinterest
+            </a> </p>
+
+          <p><a href="https://bluecaet.atabook.org/" class="button7">
+              guestbook
+            </a> </p>
+
+          <div class="statuscafetitle">
+            status cafe
+          </div>
+
+          <div class="statuscontainer">
+            <div class="statusinnercontainer">
+              <!-- start sw-rss-feed code -->
+              <script type="text/javascript">
+                <!-- 
+                rssfeed_url = new Array();
+                rssfeed_url[0] = "https://status.cafe/users/melodies.atom";
+                rssfeed_frame_width = "230";
+                rssfeed_frame_height = "260";
+                rssfeed_scroll = "off";
+                rssfeed_scroll_step = "6";
+                rssfeed_scroll_bar = "on";
+                rssfeed_target = "_blank";
+                rssfeed_font_size = "11";
+                rssfeed_font_face = "";
+                rssfeed_border = "on";
+                rssfeed_css_url = "https://bluecaet.neocities.org/statuscafe.css";
+                rssfeed_title = "off";
+                rssfeed_title_name = "";
+                rssfeed_title_bgcolor = "#3366ff";
+                rssfeed_title_color = "#fff";
+                rssfeed_title_bgimage = "";
+                rssfeed_footer = "off";
+                rssfeed_footer_name = "rss feed";
+                rssfeed_footer_bgcolor = "#fff";
+                rssfeed_footer_color = "#333";
+                rssfeed_footer_bgimage = "";
+                rssfeed_item_title_length = "10";
+                rssfeed_item_title_color = "#666";
+                rssfeed_item_bgcolor = "#fff";
+                rssfeed_item_bgimage = "";
+                rssfeed_item_border_bottom = "on";
+                rssfeed_item_source_icon = "off";
+                rssfeed_item_date = "on";
+                rssfeed_item_description = "on";
+                rssfeed_item_description_length = "160";
+                rssfeed_item_description_color = "#666";
+                rssfeed_item_description_link_color = "#333";
+                rssfeed_item_description_tag = "off";
+                rssfeed_no_items = "0";
+                rssfeed_cache = "70ee5043fef3ac625780ae018d33199c";
+                //
+                -->
+              </script>
+              <script type="text/javascript" src="//feed.surfing-waves.com/js/rss-feed.js"></script><iframe name="rssfeed_frame" width="230" height="260" frameborder="0" src="https://feed.surfing-waves.com/php/rssfeed.php?rssfeed[url][0]=https%3A%2F%2Fstatus.cafe%2Fusers%2Fmelodies.atom&amp;rssfeed[type]=&amp;rssfeed[frame_width]=230&amp;rssfeed[frame_height]=260&amp;rssfeed[scroll]=off&amp;rssfeed[scroll_step]=6&amp;rssfeed[scroll_bar]=on&amp;rssfeed[target]=_blank&amp;rssfeed[font_size]=11&amp;rssfeed[font_face]=&amp;rssfeed[border]=on&amp;rssfeed[css_url]=https%3A%2F%2Fbluecaet.neocities.org%2Fstatuscafe.css&amp;rssfeed[title]=off&amp;rssfeed[title_name]=&amp;rssfeed[title_bgcolor]=%233366ff&amp;rssfeed[title_color]=%23fff&amp;rssfeed[title_bgimage]=&amp;rssfeed[footer]=off&amp;rssfeed[footer_name]=rss%20feed&amp;rssfeed[footer_bgcolor]=%23fff&amp;rssfeed[footer_color]=%23333&amp;rssfeed[footer_bgimage]=&amp;rssfeed[item_bgcolor]=%23fff&amp;rssfeed[item_bgimage]=&amp;rssfeed[item_title_length]=10&amp;rssfeed[item_title_color]=%23666&amp;rssfeed[item_border_bottom]=on&amp;rssfeed[item_source_icon]=off&amp;rssfeed[item_date]=on&amp;rssfeed[item_description]=on&amp;rssfeed[item_description_length]=160&amp;rssfeed[item_description_color]=%23666&amp;rssfeed[item_description_link_color]=%23333&amp;rssfeed[item_description_tag]=off&amp;rssfeed[no_items]=0&amp;rssfeed[cache]=70ee5043fef3ac625780ae018d33199c" marginwidth="0" marginheight="0" vspace="0" hspace="0" scrolling="no" allowtransparency="true"></iframe>
+              <!-- The link below helps keep this service FREE, and helps other people find the SW widget. Please be cool and keep it! Thanks. -->
+              <div style="color:#ccc;font-size:10px; text-align:right; width:230px;">powered by <a href="https://surfing-waves.com" rel="noopener" target="_blank" style="color:#ccc;">Surfing Waves</a></div>
+              <!-- end sw-rss-feed code -->
+            </div>
+          </div>
+          <script src="https://status.cafe/current-status.js?name=melodies" defer=""></script>
+
+          <div class="shrinetitle">
+            shrine
+          </div>
+
+          <div class="shrinecontainer">
+
+            <a target="_blank" href="https://bluecaet.neocities.org/home"><img class="clique" alt="i love rilakkuma" src="https://bluecaet.neocities.org/resources02/iloverilakkumaclique.png" style="position: relative;"></a>
+
+            <a target="_blank" href="https://grrrl.valentinely.cc"><img class="clique" alt="girly badge" src="https://bluecaet.neocities.org/resources02/madebyagirlclique.png" style="position: relative;"></a>
+
+            <a target="_blank" href="https://sweet-pea.neocities.org/"><img class="clique" alt="girly badge" src="https://bluecaet.neocities.org/resources02/girlyclique.png" style="position: relative;"></a>
+
+          </div>
+
+        </div>
+
+        <div class="middlecontainer">
+
+          <div class="headerimg">
+
+            <div class="lace">
+            </div>
+
+            <div class="title">
+              bluecaet's room <i>!</i>
+            </div>
+          </div>
+
+          <div class="clock">02:06:49</div>
+
+          <script>
+            function clock() { // We create a new Date object and assign it to a variable called "time".
+              var time = new Date(),
+                // Access the "getHours" method on the Date object with the dot accessor.
+                hours = time.getHours(),
+                // Access the "getMinutes" method with the dot accessor.
+                minutes = time.getMinutes(),
+                seconds = time.getSeconds();
+              document.querySelectorAll('.clock')[0].innerHTML = harold(hours) + ":" + harold(minutes) + ":" + harold(seconds);
+
+              function harold(standIn) {
+                if (standIn < 10) {
+                  standIn = '0' + standIn
+                }
+                return standIn;
+              }
+            }
+            setInterval(clock, 1000);
+          </script>
+
+          <!-- credits to jubiland (ur so awesome) -->
+          <script>
+            const tooltip = document.getElementById('tooltip');
+            const tooltipElements = document.querySelectorAll('.tooltip-element');
+            let timeout;
+            window.addEventListener('mousemove', (e) => {
+              tooltip.style.top = e.clientY + 'px';
+              tooltip.style.left = e.clientX + 'px';
+            });
+            window.addEventListener('scroll', () => {
+              tooltipElements.forEach(element => {
+                if (tooltip.style.display === 'block') {
+                  tooltip.style.top = (parseFloat(tooltip.style.top) + window.scrollY) + 'px';
+                }
+              });
+            });
+            tooltipElements.forEach(element => {
+              element.addEventListener('mouseover', () => {
+                tooltip.innerHTML = element.getAttribute('data-tooltip');
+                tooltip.style.display = 'block';
+                tooltip.style.top = (event.clientY + window.scrollY) + 'px';
+                tooltip.style.left = event.clientX + 'px';
+                tooltip.style.opacity = 0;
+                setTimeout(() => {
+                  tooltip.style.opacity = 1;
+                }, 10);
+              });
+              element.addEventListener('mouseout', () => {
+                timeout = setTimeout(() => {
+                  tooltip.style.opacity = 0;
+                }, 300);
+              });
+              tooltip.addEventListener('mouseover', () => {
+                clearTimeout(timeout);
+              });
+              tooltip.addEventListener('mouseout', () => {
+                tooltip.style.opacity = 0;
+              });
+            });
+          </script>
+
+          <div class="textboxtitle">
+            information
+          </div>
+
+          <div class="textbox">
+            <div class="text">
+              hi, this is my first ever website and i'm excited to keep on working on it. i started it on the <i>april 2nd 2024</i>. if you'd like you can take a look around, there's not too much happening though, since this website is forever a work in progress. make sure to leave a guestbook comment, if u want. i would love to see who visited my page and what u thought about it. <u> thank you for visiting and come again.</u>
+              <img src="https://bluecaet.neocities.org/resources02/hearticon.png" class="hearticon" alt="heart icon">
+
+            </div>
+          </div>
+
+          <iframe src="https://www5.cbox.ws/box/?boxid=958316&amp;boxtag=" width="200" height="210" allowtransparency="yes" allow="autoplay" frameborder="0" marginheight="0" marginwidth="0" scrolling="auto"></iframe>
+
+          <div class="currentlytitle">
+            eli is currently...
+          </div>
+
+          <div class="reading">
+            reading
+          </div>
+
+          <div class="loving">
+            loving
+          </div>
+
+          <div class="workingon">
+            working on
+          </div>
+
+          <div class="readingansw">
+            she and her cat
+          </div>
+
+          <div class="lovingansw">
+            oat meal bowls
+          </div>
+
+          <div class="workingonansw">
+            reading and crafting more
+          </div>
+
+          <a href="https://bluecaet.neocities.org/gallery" class="gallery">
+            gallery
+          </a>
+
+          <img src="https://bluecaet.neocities.org/resources02/hearticon.png" class="hearticon02" alt="heart icon">
+
+          <a href="https://bluecaet.neocities.org/resoruces" class="resources">
+            resources
+          </a> <p></p>
+
+          <div class="todotitle">
+            to do
+          </div>
+
+          <div class="logstitle">
+            logs
+          </div>
+
+          <div class="todocontainer">
+
+            <div class="todo">
+              <ul>
+                <li>finish site</li>
+                <li>add music</li>
+                <s>
+                  <li>add credits page</li>
+                </s>
+                <s>
+                  <li>make page bigger</li>
+                </s>
+                <s>
+                  <li>add cliques page</li>
+                </s>
+
+              </ul>
+
+            </div>
+
+            <div class="logs">
+
+              <ul>
+                <li>[12.09.25] recoloured my page! fixed some things, added different pixels.</li>
+                <li>[01.09.25] cleaned everything up, added more links (about me page, neighbours page). fixed bugs.</li>
+                <li>[22.08.25] fixed bug.</li>
+                <li>[20.08.25] added status cafe, button for my button.</li>
+              </ul>
+
+            </div>
+          </div>
+
+          <img src="https://bluecaet.neocities.org/resources02/calendarico.png" class="calendaricon" alt="calendar">
+
+          <div class="calendertitle">
+            calendar
+          </div>
+
+          <div class="calendaroutline">
+          </div>
+
+          <div class="calendar">
+            <script language="JavaScript">
+              monthnames = new Array(
+                "January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"
+              );
+              var linkcount = 0;
+
+              function addlink(month, day, href) {
+                var entry = new Array(3);
+                entry[0] = month;
+                entry[1] = day;
+                entry[2] = href;
+                this[linkcount++] = entry;
+              }
+              Array.prototype.addlink = addlink;
+              linkdays = new Array();
+              monthdays = new Array(12);
+              monthdays[0] = 31;
+              monthdays[1] = 28;
+              monthdays[2] = 31;
+              monthdays[3] = 30;
+              monthdays[4] = 31;
+              monthdays[5] = 30;
+              monthdays[6] = 31;
+              monthdays[7] = 31;
+              monthdays[8] = 30;
+              monthdays[9] = 31;
+              monthdays[10] = 30;
+              monthdays[11] = 31;
+              todayDate = new Date();
+              thisday = todayDate.getDay();
+              thisday = (thisday + 6) % 7; // Adjust so Monday is 0
+              thismonth = todayDate.getMonth();
+              thisdate = todayDate.getDate();
+              thisyear = todayDate.getFullYear();
+              // Leap year check
+              if (((thisyear % 4 == 0) && !(thisyear % 100 == 0)) || (thisyear % 400 == 0)) {
+                monthdays[1]++;
+              }
+              // Determine the day of week for the 1st of this month
+              var firstDay = new Date(thisyear, thismonth, 1).getDay();
+              var startspaces = (firstDay + 6) % 7; // Shift so Monday = 0
+              document.write("<table border=0 bgcolor=#fffdfd bordercolor=grey>");
+              document.write("<tr><td colspan=7><center><font color='#bf978c; font-family: MS UI GOTHIC;'><div class='header'>" +
+                monthnames[thismonth] + " " + thisyear +
+                "</div></font></center></td></tr>");
+              // Day of week headers (Monday first)
+              document.write("<tr>");
+              document.write("<td align=center class='day-of-week'>M</td>");
+              document.write("<td align=center class='day-of-week'>T</td>");
+              document.write("<td align=center class='day-of-week'>W</td>");
+              document.write("<td align=center class='day-of-week'>T</td>");
+              document.write("<td align=center class='day-of-week'>F</td>");
+              document.write("<td align=center class='weekend'>S</td>");
+              document.write("<td align=center class='weekend'>S</td>");
+              document.write("</tr>");
+              document.write("<tr>");
+              for (s = 0; s < startspaces; s++) {
+                document.write("<td> </td>");
+              }
+              count = 1;
+              while (count <= monthdays[thismonth]) {
+                for (b = startspaces; b < 7; b++) {
+                  if (count > monthdays[thismonth]) break;
+                  linktrue = false;
+                  document.write("<td>");
+                  for (c = 0; c < linkdays.length; c++) {
+                    if (linkdays[c] != null && linkdays[c][0] == thismonth + 1 && linkdays[c][1] == count) {
+                      document.write("<a href=\"" + linkdays[c][2] + "\">");
+                      linktrue = true;
+                    }
+                  }
+                  if (count == thisdate) {
+                    document.write("<font color='orange; font-family: MS UI GOTHIC;'><strong>");
+                  }
+                  document.write(count);
+                  if (count == thisdate) {
+                    document.write("</strong></font>");
+                  }
+                  if (linktrue) document.write("</a>");
+                  document.write("</td>");
+                  count++;
+                }
+                document.write("</tr><tr>");
+                startspaces = 0;
+              }
+              document.write("</tr></table>");
+            </script><table border="0" bgcolor="#fffdfd" bordercolor="grey"><tbody><tr><td colspan="7"><center><font color="#bf978c; font-family: MS UI GOTHIC;"><div class="header">October 2026</div></font></center></td></tr><tr><td align="center" class="day-of-week">M</td><td align="center" class="day-of-week">T</td><td align="center" class="day-of-week">W</td><td align="center" class="day-of-week">T</td><td align="center" class="day-of-week">F</td><td align="center" class="weekend">S</td><td align="center" class="weekend">S</td></tr><tr><td> </td><td> </td><td> </td><td>1</td><td>2</td><td>3</td><td>4</td></tr><tr><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td></tr><tr><td>12</td><td><font color="orange; font-family: MS UI GOTHIC;"><strong>13</strong></font></td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td></tr><tr><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td></tr><tr><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td><td>31</td></tr><tr></tr></tbody></table>
+          </div>
+
+        </div>
+        <div class="credits">
+          made by
+          <i><a href="https://neocities.org/site/bluecaet" class="creditlink">
+              bluecaet
+            </a></i>
+          with ♡
+        </div>
+
+      </div>
+    </div>
+  </div>
+  
+
+<div style="font-style: normal; font-variant-caps: normal; font-weight: normal; font-stretch: normal; font-size: 10px; line-height: normal; font-family: monospace; font-size-adjust: none; font-kerning: auto; font-variant-alternates: normal; font-variant-ligatures: normal; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-position: normal; font-feature-settings: normal; font-optical-sizing: auto; font-variation-settings: normal; position: absolute; background-color: transparent; visibility: hidden; z-index: 101; color: rgb(179, 138, 93);">+</div><div style="font-style: normal; font-variant-caps: normal; font-weight: normal; font-stretch: normal; font-size: 10px; line-height: normal; font-family: monospace; font-size-adjust: none; font-kerning: auto; font-variant-alternates: normal; font-variant-ligatures: normal; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-position: normal; font-feature-settings: normal; font-optical-sizing: auto; font-variation-settings: normal; position: absolute; background-color: transparent; visibility: hidden; z-index: 101; color: rgb(179, 138, 93);">+</div><div style="font-style: normal; font-variant-caps: normal; font-weight: normal; font-stretch: normal; font-size: 10px; line-height: normal; font-family: monospace; font-size-adjust: none; font-kerning: auto; font-variant-alternates: normal; font-variant-ligatures: normal; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-position: normal; font-feature-settings: normal; font-optical-sizing: auto; font-variation-settings: normal; position: absolute; background-color: transparent; visibility: hidden; z-index: 101; color: rgb(179, 138, 93);">+</div><div style="font-style: normal; font-variant-caps: normal; font-weight: normal; font-stretch: normal; font-size: 13px; line-height: normal; font-family: monospace; font-size-adjust: none; font-kerning: auto; font-variant-alternates: normal; font-variant-ligatures: normal; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-position: normal; font-feature-settings: normal; font-optical-sizing: auto; font-variation-settings: normal; position: absolute; background-color: transparent; visibility: hidden; z-index: 101;">+</div><div style="font-style: normal; font-variant-caps: normal; font-weight: normal; font-stretch: normal; font-size: 13px; line-height: normal; font-family: monospace; font-size-adjust: none; font-kerning: auto; font-variant-alternates: normal; font-variant-ligatures: normal; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-position: normal; font-feature-settings: normal; font-optical-sizing: auto; font-variation-settings: normal; position: absolute; background-color: transparent; visibility: hidden; z-index: 101;">+</div><div style="font-style: normal; font-variant-caps: normal; font-weight: normal; font-stretch: normal; font-size: 13px; line-height: normal; font-family: monospace; font-size-adjust: none; font-kerning: auto; font-variant-alternates: normal; font-variant-ligatures: normal; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-position: normal; font-feature-settings: normal; font-optical-sizing: auto; font-variation-settings: normal; position: absolute; background-color: transparent; visibility: hidden; z-index: 101;">+</div><div style="font-style: normal; font-variant-caps: normal; font-weight: normal; font-stretch: normal; font-size: 13px; line-height: normal; font-family: monospace; font-size-adjust: none; font-kerning: auto; font-variant-alternates: normal; font-variant-ligatures: normal; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-position: normal; font-feature-settings: normal; font-optical-sizing: auto; font-variation-settings: normal; position: absolute; background-color: transparent; visibility: hidden; z-index: 101;">+</div><div style="font-style: normal; font-variant-caps: normal; font-weight: normal; font-stretch: normal; font-size: 13px; line-height: normal; font-family: monospace; font-size-adjust: none; font-kerning: auto; font-variant-alternates: normal; font-variant-ligatures: normal; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-position: normal; font-feature-settings: normal; font-optical-sizing: auto; font-variation-settings: normal; position: absolute; background-color: transparent; visibility: hidden; z-index: 101;">+</div><div style="font-style: normal; font-variant-caps: normal; font-weight: normal; font-stretch: normal; font-size: 13px; line-height: normal; font-family: monospace; font-size-adjust: none; font-kerning: auto; font-variant-alternates: normal; font-variant-ligatures: normal; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-position: normal; font-feature-settings: normal; font-optical-sizing: auto; font-variation-settings: normal; position: absolute; background-color: transparent; visibility: hidden; z-index: 101;">+</div></body></html>
+<head>
+  <meta charset="utf-8">
+  <title>blu</title>
+  <link rel="stylesheet" type="text/css" href="home.css">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1">
+  <link rel="icon" href="/favicon.png" type="image/x-icon">
+
+  <script>
+    function tb8_makeArray(n) {
+      this.length = n;
+      return this.length;
+    }
+    tb8_messages = new tb8_makeArray(1);
+    tb8_messages[0] = "bluecaet"
+    tb8_rptType = 'infinite';
+    tb8_rptNbr = 5;
+    tb8_speed = 220;
+    tb8_delay = 1000;
+    href = "https://bluecaet.neocities.org/"
+    var tb8_counter = 1;
+    var tb8_currMsg = 0;
+    var tb8_tekst = "";
+    var tb8_i = 0;
+    var tb8_TID = null;
+
+    function tb8_pisi() {
+      tb8_tekst = tb8_tekst + tb8_messages[tb8_currMsg].substring(tb8_i, tb8_i + 1);
+      document.title = tb8_tekst;
+      tb8_sp = tb8_speed;
+      tb8_i++;
+      if (tb8_i == tb8_messages[tb8_currMsg].length) {
+        tb8_currMsg++;
+        tb8_i = 0;
+        tb8_tekst = "";
+        tb8_sp = tb8_delay;
+      }
+      if (tb8_currMsg == tb8_messages.length) {
+        if ((tb8_rptType == 'finite') && (tb8_counter == tb8_rptNbr)) {
+          clearTimeout(tb8_TID);
+          return;
+        }
+        tb8_counter++;
+        tb8_currMsg = 0;
+      }
+      tb8_TID = setTimeout("tb8_pisi()", tb8_sp);
+    }
+    tb8_pisi()
+  </script>
+
+  <style>
+    * {
+      cursor: url(https://64.media.tumblr.com/tumblr_m2umkqvNUT1qfamg6.gif), auto !important;
+    }
+
+    <a href="https://www.cursors-4u.com/cursor/2011/10/19/tiny-hand-bow-red-heart.html"target="_blank"title="Tiny Hand Bow Red Heart"><img src="https://cur.cursors-4u.net/cursor.png"border="0"alt="Tiny Hand Bow Red Heart"style="display: none; position:absolute; top: 0px; right: 0px;"/></a>
+  </style>
+  <script src="https://iframe.chat/scripts/main.min.js"></script>
+
+  <script type="text/javascript">
+    // <![CDATA[
+    var sparks = 3; // how many sparks per clicksplosion
+    var speed = 25; // how fast - smaller is faster
+    var bangs = 3; // how many can be launched simultaneously (note that using too many can slow the script down)
+    var colours = new Array('#b38a5d');
+    //                     blue    red     green   purple  cyan    orange  pink
+    /****************************
+     *   Clicksplosion Effect    *
+     *(c)2012-3 mf2fm web-design *
+     *  http://www.mf2fm.com/rv  *
+     * DON'T EDIT BELOW THIS BOX *
+     ****************************/
+    var intensity = new Array();
+    var Xpos = new Array();
+    var Ypos = new Array();
+    var dX = new Array();
+    var dY = new Array();
+    var stars = new Array();
+    var decay = new Array();
+    var timers = new Array();
+    var swide = 800;
+    var shigh = 600;
+    var sleft = sdown = 0;
+    var count = 0;
+
+    function addLoadEvent(funky) {
+      var oldonload = window.onload;
+      if (typeof(oldonload) != 'function') window.onload = funky;
+      else window.onload = function() {
+        if (oldonload) oldonload();
+        funky();
+      }
+    }
+    addLoadEvent(clicksplode);
+
+    function clicksplode() {
+      if (document.getElementById) {
+        var i, j;
+        window.onscroll = set_scroll;
+        window.onresize = set_width;
+        document.onclick = eksplode;
+        set_width();
+        set_scroll();
+        for (i = 0; i < bangs; i++)
+          for (j = sparks * i; j < sparks + sparks * i; j++) {
+            stars[j] = createDiv('+', 13);
+            document.body.appendChild(stars[j]);
+          }
+      }
+    }
+
+    function createDiv(char, size) {
+      var div, sty;
+      div = document.createElement('div');
+      sty = div.style;
+      sty.font = size + 'px monospace';
+      sty.position = 'absolute';
+      sty.backgroundColor = 'transparent';
+      sty.visibility = 'hidden';
+      sty.zIndex = '101';
+      div.appendChild(document.createTextNode(char));
+      return (div);
+    }
+
+    function bang(N) {
+      var i, Z, A = 0;
+      for (i = sparks * N; i < sparks * (N + 1); i++) {
+        if (decay[i]) {
+          Z = stars[i].style;
+          Xpos[i] += dX[i];
+          Ypos[i] += (dY[i] += 1.25 / intensity[N]);
+          if (Xpos[i] >= swide || Xpos[i] < 0 || Ypos[i] >= shigh + sdown || Ypos[i] < 0) decay[i] = 1;
+          else {
+            Z.left = Xpos[i] + 'px';
+            Z.top = Ypos[i] + 'px';
+          }
+          if (decay[i] == 15) Z.fontSize = '3px';
+          else if (decay[i] == 7) Z.fontSize = '2px';
+          else if (decay[i] == 1) Z.visibility = 'hidden';
+          decay[i]--;
+        } else A++;
+      }
+      if (A != sparks) timers[N] = setTimeout('bang(' + N + ')', speed);
+    }
+
+    function eksplode(e) {
+      var x, y, i, M, Z, N;
+      set_scroll();
+      y = (e) ? e.pageY : event.y + sdown;
+      x = (e) ? e.pageX : event.x + sleft;
+      N = ++count % bangs;
+      M = Math.floor(Math.random() * 3 * colours.length);
+      intensity[N] = 5 + Math.random() * 4;
+      for (i = N * sparks; i < (N + 1) * sparks; i++) {
+        Xpos[i] = x;
+        Ypos[i] = y - 5;
+        dY[i] = (Math.random() - 0.5) * intensity[N];
+        dX[i] = (Math.random() - 0.5) * (intensity[N] - Math.abs(dY[i])) * 1.25;
+        decay[i] = 16 + Math.floor(Math.random() * 16);
+        Z = stars[i].style;
+        if (M < colours.length) Z.color = colours[i % 2 ? count % colours.length : M];
+        else if (M < 2 * colours.length) Z.color = colours[count % colours.length];
+        else Z.color = colours[i % colours.length];
+        Z.fontSize = '10px';
+        Z.visibility = 'visible';
+      }
+      clearTimeout(timers[N]);
+      bang(N);
+    }
+
+    function set_width() {
+      var sw_min = 999999;
+      var sh_min = 999999;
+      if (document.documentElement && document.documentElement.clientWidth) {
+        if (document.documentElement.clientWidth > 0) sw_min = document.documentElement.clientWidth;
+        if (document.documentElement.clientHeight > 0) sh_min = document.documentElement.clientHeight;
+      }
+      if (typeof(self.innerWidth) == 'number' && self.innerWidth) {
+        if (self.innerWidth > 0 && self.innerWidth < sw_min) sw_min = self.innerWidth;
+        if (self.innerHeight > 0 && self.innerHeight < sh_min) sh_min = self.innerHeight;
+      }
+      if (document.body.clientWidth) {
+        if (document.body.clientWidth > 0 && document.body.clientWidth < sw_min) sw_min = document.body.clientWidth;
+        if (document.body.clientHeight > 0 && document.body.clientHeight < sh_min) sh_min = document.body.clientHeight;
+      }
+      if (sw_min == 999999 || sh_min == 999999) {
+        sw_min = 800;
+        sh_min = 600;
+      }
+      swide = sw_min - 7;
+      shigh = sh_min - 7;
+    }
+
+    function set_scroll() {
+      if (typeof(self.pageYOffset) == 'number') {
+        sdown = self.pageYOffset;
+        sleft = self.pageXOffset;
+      } else if (document.body && (document.body.scrollTop || document.body.scrollLeft)) {
+        sdown = document.body.scrollTop;
+        sleft = document.body.scrollLeft;
+      } else if (document.documentElement && (document.documentElement.scrollTop || document.documentElement.scrollLeft)) {
+        sleft = document.documentElement.scrollLeft;
+        sdown = document.documentElement.scrollTop;
+      } else {
+        sdown = 0;
+        sleft = 0;
+      }
+    }
+    // ]]>
+  </script>
+
+  </head>
+<body><div class="maincontainer">
+
+    <!-- FC2 Clap tag starts here -->
+    <a href="//clap.fc2.com/post/bluecaet/?url=https%3A%2F%2Fbluecaet.neocities.org%2Fhome&amp;title=Bluecaet" target="_blank" title="Web Clap by FC2"><img src="https://files.catbox.moe/9l9pjd.png" alt="Web Clap by FC2" style="border:none; margin-top: 10px; margin-left: 615px; position: absolute;"></a>
+    <!-- FC2 Clap tag ends here -->
+
+    <!-- FC2 Counter  Starts here -->
+    <div class="counter">
+
+      <script language="javascript" type="text/javascript" src="//counter1.fc2.com/counter.php?id=40325304&amp;main=1"></script><a href="https://counter.fc2.com/" rel="noopener" target="_blank"><span><nobr><img border="0" src="https://counter1-cdn-ssl.fc2.com/cimg/66/00090966/6.gif" alt="FC2無料カウンター" "="" title="FC2無料カウンター" style="display:inline;margin:0px;padding:0px;border:none;"><img border="0" src="https://counter1-cdn-ssl.fc2.com/cimg/66/00090966/8.gif" alt="FC2無料カウンター" "="" title="FC2無料カウンター" style="display:inline;margin:0px;padding:0px;border:none;"><img border="0" src="https://counter1-cdn-ssl.fc2.com/cimg/66/00090966/2.gif" alt="FC2無料カウンター" "="" title="FC2無料カウンター" style="display:inline;margin:0px;padding:0px;border:none;"><img border="0" src="https://counter1-cdn-ssl.fc2.com/cimg/66/00090966/9.gif" alt="FC2無料カウンター" "="" title="FC2無料カウンター" style="display:inline;margin:0px;padding:0px;border:none;"></nobr><span></span></span></a><script src="https://counter1.fc2.com/counter_js.php?id=40325304&amp;main=1&amp;lang=0&amp;visitor=2" charset="UTF-8"></script><noscript>&lt;img src="//counter1.fc2.com/counter_img.php?id=40325304&amp;main=1" alt="counter" /&gt;</noscript>
+
+    </div>
+    <!-- FC2 Counter  Ends here -->
+
+    <div class="mainborder">
+      <div class="container">
+        <div class="leftcontainer">
+
+          <div class="miniprofile">
+            <span style="background: #eef2fb; border radius: 2px;">about me:</span> eli <img src="https://bluecaet.neocities.org/resources02/staricon.png" class="staricon" alt="star icon">
+            she / her
+            <p><u>19</u> years old , infp (introverted girl) cat and bunny lover , big fan of pastries and polka dots <i>!</i>
+
+            </p><p><a href="https://bluecaet.neocities.org/neighbours" class="bluecaetbutton">
+                add my button
+              </a>
+
+              <img src="https://bluecaet.neocities.org/resources02/hearticon.png" class="hearticon" alt="heart icon">
+
+              <a href="https://bluecaet.neocities.org/neighbours" class="email">
+                email me
+              </a>
+            </p>
+
+          </div>
+
+          <div class="navigation">
+            navigation
+          </div>
+
+          <p><a href="https://bluecaet.neocities.org/" class="button1">
+              home
+            </a> </p>
+
+          <p><a href="https://bluecaet.neocities.org/diary" class="button2">
+              diary
+            </a> </p>
+
+          <p><a href="https://bluecaet.neocities.org/aboutme" class="button3">
+              about me
+            </a> </p>
+
+          <p><a href="https://bluecaet.neocities.org/credits" class="button4">
+              credits
+            </a> </p>
+
+          <p><a href="https://bluecaet.neocities.org/cliques" class="button5">
+              my cliques
+            </a> </p>
+
+          <div class="offsite">
+            off-site
+          </div>
+
+          <p><a href="https://pin.it/4VFrKNFF0" class="button6">
+              pinterest
+            </a> </p>
+
+          <p><a href="https://bluecaet.atabook.org/" class="button7">
+              guestbook
+            </a> </p>
+
+          <div class="statuscafetitle">
+            status cafe
+          </div>
+
+          <div class="statuscontainer">
+            <div class="statusinnercontainer">
+              <!-- start sw-rss-feed code -->
+              <script type="text/javascript">
+                <!-- 
+                rssfeed_url = new Array();
+                rssfeed_url[0] = "https://status.cafe/users/melodies.atom";
+                rssfeed_frame_width = "230";
+                rssfeed_frame_height = "260";
+                rssfeed_scroll = "off";
+                rssfeed_scroll_step = "6";
+                rssfeed_scroll_bar = "on";
+                rssfeed_target = "_blank";
+                rssfeed_font_size = "11";
+                rssfeed_font_face = "";
+                rssfeed_border = "on";
+                rssfeed_css_url = "https://bluecaet.neocities.org/statuscafe.css";
+                rssfeed_title = "off";
+                rssfeed_title_name = "";
+                rssfeed_title_bgcolor = "#3366ff";
+                rssfeed_title_color = "#fff";
+                rssfeed_title_bgimage = "";
+                rssfeed_footer = "off";
+                rssfeed_footer_name = "rss feed";
+                rssfeed_footer_bgcolor = "#fff";
+                rssfeed_footer_color = "#333";
+                rssfeed_footer_bgimage = "";
+                rssfeed_item_title_length = "10";
+                rssfeed_item_title_color = "#666";
+                rssfeed_item_bgcolor = "#fff";
+                rssfeed_item_bgimage = "";
+                rssfeed_item_border_bottom = "on";
+                rssfeed_item_source_icon = "off";
+                rssfeed_item_date = "on";
+                rssfeed_item_description = "on";
+                rssfeed_item_description_length = "160";
+                rssfeed_item_description_color = "#666";
+                rssfeed_item_description_link_color = "#333";
+                rssfeed_item_description_tag = "off";
+                rssfeed_no_items = "0";
+                rssfeed_cache = "70ee5043fef3ac625780ae018d33199c";
+                //
+                -->
+              </script>
+              <script type="text/javascript" src="//feed.surfing-waves.com/js/rss-feed.js"></script><iframe name="rssfeed_frame" width="230" height="260" frameborder="0" src="https://feed.surfing-waves.com/php/rssfeed.php?rssfeed[url][0]=https%3A%2F%2Fstatus.cafe%2Fusers%2Fmelodies.atom&amp;rssfeed[type]=&amp;rssfeed[frame_width]=230&amp;rssfeed[frame_height]=260&amp;rssfeed[scroll]=off&amp;rssfeed[scroll_step]=6&amp;rssfeed[scroll_bar]=on&amp;rssfeed[target]=_blank&amp;rssfeed[font_size]=11&amp;rssfeed[font_face]=&amp;rssfeed[border]=on&amp;rssfeed[css_url]=https%3A%2F%2Fbluecaet.neocities.org%2Fstatuscafe.css&amp;rssfeed[title]=off&amp;rssfeed[title_name]=&amp;rssfeed[title_bgcolor]=%233366ff&amp;rssfeed[title_color]=%23fff&amp;rssfeed[title_bgimage]=&amp;rssfeed[footer]=off&amp;rssfeed[footer_name]=rss%20feed&amp;rssfeed[footer_bgcolor]=%23fff&amp;rssfeed[footer_color]=%23333&amp;rssfeed[footer_bgimage]=&amp;rssfeed[item_bgcolor]=%23fff&amp;rssfeed[item_bgimage]=&amp;rssfeed[item_title_length]=10&amp;rssfeed[item_title_color]=%23666&amp;rssfeed[item_border_bottom]=on&amp;rssfeed[item_source_icon]=off&amp;rssfeed[item_date]=on&amp;rssfeed[item_description]=on&amp;rssfeed[item_description_length]=160&amp;rssfeed[item_description_color]=%23666&amp;rssfeed[item_description_link_color]=%23333&amp;rssfeed[item_description_tag]=off&amp;rssfeed[no_items]=0&amp;rssfeed[cache]=70ee5043fef3ac625780ae018d33199c" marginwidth="0" marginheight="0" vspace="0" hspace="0" scrolling="no" allowtransparency="true"></iframe>
+              <!-- The link below helps keep this service FREE, and helps other people find the SW widget. Please be cool and keep it! Thanks. -->
+              <div style="color:#ccc;font-size:10px; text-align:right; width:230px;">powered by <a href="https://surfing-waves.com" rel="noopener" target="_blank" style="color:#ccc;">Surfing Waves</a></div>
+              <!-- end sw-rss-feed code -->
+            </div>
+          </div>
+          <script src="https://status.cafe/current-status.js?name=melodies" defer=""></script>
+
+          <div class="shrinetitle">
+            shrine
+          </div>
+
+          <div class="shrinecontainer">
+
+            <a target="_blank" href="https://bluecaet.neocities.org/home"><img class="clique" alt="i love rilakkuma" src="https://bluecaet.neocities.org/resources02/iloverilakkumaclique.png" style="position: relative;"></a>
+
+            <a target="_blank" href="https://grrrl.valentinely.cc"><img class="clique" alt="girly badge" src="https://bluecaet.neocities.org/resources02/madebyagirlclique.png" style="position: relative;"></a>
+
+            <a target="_blank" href="https://sweet-pea.neocities.org/"><img class="clique" alt="girly badge" src="https://bluecaet.neocities.org/resources02/girlyclique.png" style="position: relative;"></a>
+
+          </div>
+
+        </div>
+
+        <div class="middlecontainer">
+
+          <div class="headerimg">
+
+            <div class="lace">
+            </div>
+
+            <div class="title">
+              bluecaet's room <i>!</i>
+            </div>
+          </div>
+
+          <div class="clock">02:06:49</div>
+
+          <script>
+            function clock() { // We create a new Date object and assign it to a variable called "time".
+              var time = new Date(),
+                // Access the "getHours" method on the Date object with the dot accessor.
+                hours = time.getHours(),
+                // Access the "getMinutes" method with the dot accessor.
+                minutes = time.getMinutes(),
+                seconds = time.getSeconds();
+              document.querySelectorAll('.clock')[0].innerHTML = harold(hours) + ":" + harold(minutes) + ":" + harold(seconds);
+
+              function harold(standIn) {
+                if (standIn < 10) {
+                  standIn = '0' + standIn
+                }
+                return standIn;
+              }
+            }
+            setInterval(clock, 1000);
+          </script>
+
+          <!-- credits to jubiland (ur so awesome) -->
+          <script>
+            const tooltip = document.getElementById('tooltip');
+            const tooltipElements = document.querySelectorAll('.tooltip-element');
+            let timeout;
+            window.addEventListener('mousemove', (e) => {
+              tooltip.style.top = e.clientY + 'px';
+              tooltip.style.left = e.clientX + 'px';
+            });
+            window.addEventListener('scroll', () => {
+              tooltipElements.forEach(element => {
+                if (tooltip.style.display === 'block') {
+                  tooltip.style.top = (parseFloat(tooltip.style.top) + window.scrollY) + 'px';
+                }
+              });
+            });
+            tooltipElements.forEach(element => {
+              element.addEventListener('mouseover', () => {
+                tooltip.innerHTML = element.getAttribute('data-tooltip');
+                tooltip.style.display = 'block';
+                tooltip.style.top = (event.clientY + window.scrollY) + 'px';
+                tooltip.style.left = event.clientX + 'px';
+                tooltip.style.opacity = 0;
+                setTimeout(() => {
+                  tooltip.style.opacity = 1;
+                }, 10);
+              });
+              element.addEventListener('mouseout', () => {
+                timeout = setTimeout(() => {
+                  tooltip.style.opacity = 0;
+                }, 300);
+              });
+              tooltip.addEventListener('mouseover', () => {
+                clearTimeout(timeout);
+              });
+              tooltip.addEventListener('mouseout', () => {
+                tooltip.style.opacity = 0;
+              });
+            });
+          </script>
+
+          <div class="textboxtitle">
+            information
+          </div>
+
+          <div class="textbox">
+            <div class="text">
+              hi, this is my first ever website and i'm excited to keep on working on it. i started it on the <i>april 2nd 2024</i>. if you'd like you can take a look around, there's not too much happening though, since this website is forever a work in progress. make sure to leave a guestbook comment, if u want. i would love to see who visited my page and what u thought about it. <u> thank you for visiting and come again.</u>
+              <img src="https://bluecaet.neocities.org/resources02/hearticon.png" class="hearticon" alt="heart icon">
+
+            </div>
+          </div>
+
+          <iframe src="https://www5.cbox.ws/box/?boxid=958316&amp;boxtag=" width="200" height="210" allowtransparency="yes" allow="autoplay" frameborder="0" marginheight="0" marginwidth="0" scrolling="auto"></iframe>
+
+          <div class="currentlytitle">
+            eli is currently...
+          </div>
+
+          <div class="reading">
+            reading
+          </div>
+
+          <div class="loving">
+            loving
+          </div>
+
+          <div class="workingon">
+            working on
+          </div>
+
+          <div class="readingansw">
+            she and her cat
+          </div>
+
+          <div class="lovingansw">
+            oat meal bowls
+          </div>
+
+          <div class="workingonansw">
+            reading and crafting more
+          </div>
+
+          <a href="https://bluecaet.neocities.org/gallery" class="gallery">
+            gallery
+          </a>
+
+          <img src="https://bluecaet.neocities.org/resources02/hearticon.png" class="hearticon02" alt="heart icon">
+
+          <a href="https://bluecaet.neocities.org/resoruces" class="resources">
+            resources
+          </a> <p></p>
+
+          <div class="todotitle">
+            to do
+          </div>
+
+          <div class="logstitle">
+            logs
+          </div>
+
+          <div class="todocontainer">
+
+            <div class="todo">
+              <ul>
+                <li>finish site</li>
+                <li>add music</li>
+                <s>
+                  <li>add credits page</li>
+                </s>
+                <s>
+                  <li>make page bigger</li>
+                </s>
+                <s>
+                  <li>add cliques page</li>
+                </s>
+
+              </ul>
+
+            </div>
+
+            <div class="logs">
+
+              <ul>
+                <li>[12.09.25] recoloured my page! fixed some things, added different pixels.</li>
+                <li>[01.09.25] cleaned everything up, added more links (about me page, neighbours page). fixed bugs.</li>
+                <li>[22.08.25] fixed bug.</li>
+                <li>[20.08.25] added status cafe, button for my button.</li>
+              </ul>
+
+            </div>
+          </div>
+
+          <img src="https://bluecaet.neocities.org/resources02/calendarico.png" class="calendaricon" alt="calendar">
+
+          <div class="calendertitle">
+            calendar
+          </div>
+
+          <div class="calendaroutline">
+          </div>
+
+          <div class="calendar">
+            <script language="JavaScript">
+              monthnames = new Array(
+                "January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"
+              );
+              var linkcount = 0;
+
+              function addlink(month, day, href) {
+                var entry = new Array(3);
+                entry[0] = month;
+                entry[1] = day;
+                entry[2] = href;
+                this[linkcount++] = entry;
+              }
+              Array.prototype.addlink = addlink;
+              linkdays = new Array();
+              monthdays = new Array(12);
+              monthdays[0] = 31;
+              monthdays[1] = 28;
+              monthdays[2] = 31;
+              monthdays[3] = 30;
+              monthdays[4] = 31;
+              monthdays[5] = 30;
+              monthdays[6] = 31;
+              monthdays[7] = 31;
+              monthdays[8] = 30;
+              monthdays[9] = 31;
+              monthdays[10] = 30;
+              monthdays[11] = 31;
+              todayDate = new Date();
+              thisday = todayDate.getDay();
+              thisday = (thisday + 6) % 7; // Adjust so Monday is 0
+              thismonth = todayDate.getMonth();
+              thisdate = todayDate.getDate();
+              thisyear = todayDate.getFullYear();
+              // Leap year check
+              if (((thisyear % 4 == 0) && !(thisyear % 100 == 0)) || (thisyear % 400 == 0)) {
+                monthdays[1]++;
+              }
+              // Determine the day of week for the 1st of this month
+              var firstDay = new Date(thisyear, thismonth, 1).getDay();
+              var startspaces = (firstDay + 6) % 7; // Shift so Monday = 0
+              document.write("<table border=0 bgcolor=#fffdfd bordercolor=grey>");
+              document.write("<tr><td colspan=7><center><font color='#bf978c; font-family: MS UI GOTHIC;'><div class='header'>" +
+                monthnames[thismonth] + " " + thisyear +
+                "</div></font></center></td></tr>");
+              // Day of week headers (Monday first)
+              document.write("<tr>");
+              document.write("<td align=center class='day-of-week'>M</td>");
+              document.write("<td align=center class='day-of-week'>T</td>");
+              document.write("<td align=center class='day-of-week'>W</td>");
+              document.write("<td align=center class='day-of-week'>T</td>");
+              document.write("<td align=center class='day-of-week'>F</td>");
+              document.write("<td align=center class='weekend'>S</td>");
+              document.write("<td align=center class='weekend'>S</td>");
+              document.write("</tr>");
+              document.write("<tr>");
+              for (s = 0; s < startspaces; s++) {
+                document.write("<td> </td>");
+              }
+              count = 1;
+              while (count <= monthdays[thismonth]) {
+                for (b = startspaces; b < 7; b++) {
+                  if (count > monthdays[thismonth]) break;
+                  linktrue = false;
+                  document.write("<td>");
+                  for (c = 0; c < linkdays.length; c++) {
+                    if (linkdays[c] != null && linkdays[c][0] == thismonth + 1 && linkdays[c][1] == count) {
+                      document.write("<a href=\"" + linkdays[c][2] + "\">");
+                      linktrue = true;
+                    }
+                  }
+                  if (count == thisdate) {
+                    document.write("<font color='orange; font-family: MS UI GOTHIC;'><strong>");
+                  }
+                  document.write(count);
+                  if (count == thisdate) {
+                    document.write("</strong></font>");
+                  }
+                  if (linktrue) document.write("</a>");
+                  document.write("</td>");
+                  count++;
+                }
+                document.write("</tr><tr>");
+                startspaces = 0;
+              }
+              document.write("</tr></table>");
+            </script><table border="0" bgcolor="#fffdfd" bordercolor="grey"><tbody><tr><td colspan="7"><center><font color="#bf978c; font-family: MS UI GOTHIC;"><div class="header">October 2026</div></font></center></td></tr><tr><td align="center" class="day-of-week">M</td><td align="center" class="day-of-week">T</td><td align="center" class="day-of-week">W</td><td align="center" class="day-of-week">T</td><td align="center" class="day-of-week">F</td><td align="center" class="weekend">S</td><td align="center" class="weekend">S</td></tr><tr><td> </td><td> </td><td> </td><td>1</td><td>2</td><td>3</td><td>4</td></tr><tr><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td></tr><tr><td>12</td><td><font color="orange; font-family: MS UI GOTHIC;"><strong>13</strong></font></td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td></tr><tr><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td></tr><tr><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td><td>31</td></tr><tr></tr></tbody></table>
+          </div>
+
+        </div>
+        <div class="credits">
+          made by
+          <i><a href="https://neocities.org/site/bluecaet" class="creditlink">
+              bluecaet
+            </a></i>
+          with ♡
+        </div>
+
+      </div>
+    </div>
+  </div>
+  
+
+<div style="font-style: normal; font-variant-caps: normal; font-weight: normal; font-stretch: normal; font-size: 10px; line-height: normal; font-family: monospace; font-size-adjust: none; font-kerning: auto; font-variant-alternates: normal; font-variant-ligatures: normal; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-position: normal; font-feature-settings: normal; font-optical-sizing: auto; font-variation-settings: normal; position: absolute; background-color: transparent; visibility: hidden; z-index: 101; color: rgb(179, 138, 93);">+</div><div style="font-style: normal; font-variant-caps: normal; font-weight: normal; font-stretch: normal; font-size: 10px; line-height: normal; font-family: monospace; font-size-adjust: none; font-kerning: auto; font-variant-alternates: normal; font-variant-ligatures: normal; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-position: normal; font-feature-settings: normal; font-optical-sizing: auto; font-variation-settings: normal; position: absolute; background-color: transparent; visibility: hidden; z-index: 101; color: rgb(179, 138, 93);">+</div><div style="font-style: normal; font-variant-caps: normal; font-weight: normal; font-stretch: normal; font-size: 10px; line-height: normal; font-family: monospace; font-size-adjust: none; font-kerning: auto; font-variant-alternates: normal; font-variant-ligatures: normal; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-position: normal; font-feature-settings: normal; font-optical-sizing: auto; font-variation-settings: normal; position: absolute; background-color: transparent; visibility: hidden; z-index: 101; color: rgb(179, 138, 93);">+</div><div style="font-style: normal; font-variant-caps: normal; font-weight: normal; font-stretch: normal; font-size: 13px; line-height: normal; font-family: monospace; font-size-adjust: none; font-kerning: auto; font-variant-alternates: normal; font-variant-ligatures: normal; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-position: normal; font-feature-settings: normal; font-optical-sizing: auto; font-variation-settings: normal; position: absolute; background-color: transparent; visibility: hidden; z-index: 101;">+</div><div style="font-style: normal; font-variant-caps: normal; font-weight: normal; font-stretch: normal; font-size: 13px; line-height: normal; font-family: monospace; font-size-adjust: none; font-kerning: auto; font-variant-alternates: normal; font-variant-ligatures: normal; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-position: normal; font-feature-settings: normal; font-optical-sizing: auto; font-variation-settings: normal; position: absolute; background-color: transparent; visibility: hidden; z-index: 101;">+</div><div style="font-style: normal; font-variant-caps: normal; font-weight: normal; font-stretch: normal; font-size: 13px; line-height: normal; font-family: monospace; font-size-adjust: none; font-kerning: auto; font-variant-alternates: normal; font-variant-ligatures: normal; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-position: normal; font-feature-settings: normal; font-optical-sizing: auto; font-variation-settings: normal; position: absolute; background-color: transparent; visibility: hidden; z-index: 101;">+</div><div style="font-style: normal; font-variant-caps: normal; font-weight: normal; font-stretch: normal; font-size: 13px; line-height: normal; font-family: monospace; font-size-adjust: none; font-kerning: auto; font-variant-alternates: normal; font-variant-ligatures: normal; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-position: normal; font-feature-settings: normal; font-optical-sizing: auto; font-variation-settings: normal; position: absolute; background-color: transparent; visibility: hidden; z-index: 101;">+</div><div style="font-style: normal; font-variant-caps: normal; font-weight: normal; font-stretch: normal; font-size: 13px; line-height: normal; font-family: monospace; font-size-adjust: none; font-kerning: auto; font-variant-alternates: normal; font-variant-ligatures: normal; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-position: normal; font-feature-settings: normal; font-optical-sizing: auto; font-variation-settings: normal; position: absolute; background-color: transparent; visibility: hidden; z-index: 101;">+</div><div style="font-style: normal; font-variant-caps: normal; font-weight: normal; font-stretch: normal; font-size: 13px; line-height: normal; font-family: monospace; font-size-adjust: none; font-kerning: auto; font-variant-alternates: normal; font-variant-ligatures: normal; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-position: normal; font-feature-settings: normal; font-optical-sizing: auto; font-variation-settings: normal; position: absolute; background-color: transparent; visibility: hidden; z-index: 101;">+</div></body>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <title>blu</title>
+  <link rel="stylesheet" type="text/css" href="home.css">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1">
+  <link rel="icon" href="/favicon.png" type="image/x-icon">
+
+  <script>
+    function tb8_makeArray(n) {
+      this.length = n;
+      return this.length;
+    }
+    tb8_messages = new tb8_makeArray(1);
+    tb8_messages[0] = "bluecaet"
+    tb8_rptType = 'infinite';
+    tb8_rptNbr = 5;
+    tb8_speed = 220;
+    tb8_delay = 1000;
+    href = "https://bluecaet.neocities.org/"
+    var tb8_counter = 1;
+    var tb8_currMsg = 0;
+    var tb8_tekst = "";
+    var tb8_i = 0;
+    var tb8_TID = null;
+
+    function tb8_pisi() {
+      tb8_tekst = tb8_tekst + tb8_messages[tb8_currMsg].substring(tb8_i, tb8_i + 1);
+      document.title = tb8_tekst;
+      tb8_sp = tb8_speed;
+      tb8_i++;
+      if (tb8_i == tb8_messages[tb8_currMsg].length) {
+        tb8_currMsg++;
+        tb8_i = 0;
+        tb8_tekst = "";
+        tb8_sp = tb8_delay;
+      }
+      if (tb8_currMsg == tb8_messages.length) {
+        if ((tb8_rptType == 'finite') && (tb8_counter == tb8_rptNbr)) {
+          clearTimeout(tb8_TID);
+          return;
+        }
+        tb8_counter++;
+        tb8_currMsg = 0;
+      }
+      tb8_TID = setTimeout("tb8_pisi()", tb8_sp);
+    }
+    tb8_pisi()
+  </script>
+
+  <style>
+    * {
+      cursor: url(https://64.media.tumblr.com/tumblr_m2umkqvNUT1qfamg6.gif), auto !important;
+    }
+
+    <a href="https://www.cursors-4u.com/cursor/2011/10/19/tiny-hand-bow-red-heart.html"target="_blank"title="Tiny Hand Bow Red Heart"><img src="https://cur.cursors-4u.net/cursor.png"border="0"alt="Tiny Hand Bow Red Heart"style="display: none; position:absolute; top: 0px; right: 0px;"/></a>
+  </style>
+  <script src="https://iframe.chat/scripts/main.min.js"></script>
+
+  <script type="text/javascript">
+    // <![CDATA[
+    var sparks = 3; // how many sparks per clicksplosion
+    var speed = 25; // how fast - smaller is faster
+    var bangs = 3; // how many can be launched simultaneously (note that using too many can slow the script down)
+    var colours = new Array('#b38a5d');
+    //                     blue    red     green   purple  cyan    orange  pink
+    /****************************
+     *   Clicksplosion Effect    *
+     *(c)2012-3 mf2fm web-design *
+     *  http://www.mf2fm.com/rv  *
+     * DON'T EDIT BELOW THIS BOX *
+     ****************************/
+    var intensity = new Array();
+    var Xpos = new Array();
+    var Ypos = new Array();
+    var dX = new Array();
+    var dY = new Array();
+    var stars = new Array();
+    var decay = new Array();
+    var timers = new Array();
+    var swide = 800;
+    var shigh = 600;
+    var sleft = sdown = 0;
+    var count = 0;
+
+    function addLoadEvent(funky) {
+      var oldonload = window.onload;
+      if (typeof(oldonload) != 'function') window.onload = funky;
+      else window.onload = function() {
+        if (oldonload) oldonload();
+        funky();
+      }
+    }
+    addLoadEvent(clicksplode);
+
+    function clicksplode() {
+      if (document.getElementById) {
+        var i, j;
+        window.onscroll = set_scroll;
+        window.onresize = set_width;
+        document.onclick = eksplode;
+        set_width();
+        set_scroll();
+        for (i = 0; i < bangs; i++)
+          for (j = sparks * i; j < sparks + sparks * i; j++) {
+            stars[j] = createDiv('+', 13);
+            document.body.appendChild(stars[j]);
+          }
+      }
+    }
+
+    function createDiv(char, size) {
+      var div, sty;
+      div = document.createElement('div');
+      sty = div.style;
+      sty.font = size + 'px monospace';
+      sty.position = 'absolute';
+      sty.backgroundColor = 'transparent';
+      sty.visibility = 'hidden';
+      sty.zIndex = '101';
+      div.appendChild(document.createTextNode(char));
+      return (div);
+    }
+
+    function bang(N) {
+      var i, Z, A = 0;
+      for (i = sparks * N; i < sparks * (N + 1); i++) {
+        if (decay[i]) {
+          Z = stars[i].style;
+          Xpos[i] += dX[i];
+          Ypos[i] += (dY[i] += 1.25 / intensity[N]);
+          if (Xpos[i] >= swide || Xpos[i] < 0 || Ypos[i] >= shigh + sdown || Ypos[i] < 0) decay[i] = 1;
+          else {
+            Z.left = Xpos[i] + 'px';
+            Z.top = Ypos[i] + 'px';
+          }
+          if (decay[i] == 15) Z.fontSize = '3px';
+          else if (decay[i] == 7) Z.fontSize = '2px';
+          else if (decay[i] == 1) Z.visibility = 'hidden';
+          decay[i]--;
+        } else A++;
+      }
+      if (A != sparks) timers[N] = setTimeout('bang(' + N + ')', speed);
+    }
+
+    function eksplode(e) {
+      var x, y, i, M, Z, N;
+      set_scroll();
+      y = (e) ? e.pageY : event.y + sdown;
+      x = (e) ? e.pageX : event.x + sleft;
+      N = ++count % bangs;
+      M = Math.floor(Math.random() * 3 * colours.length);
+      intensity[N] = 5 + Math.random() * 4;
+      for (i = N * sparks; i < (N + 1) * sparks; i++) {
+        Xpos[i] = x;
+        Ypos[i] = y - 5;
+        dY[i] = (Math.random() - 0.5) * intensity[N];
+        dX[i] = (Math.random() - 0.5) * (intensity[N] - Math.abs(dY[i])) * 1.25;
+        decay[i] = 16 + Math.floor(Math.random() * 16);
+        Z = stars[i].style;
+        if (M < colours.length) Z.color = colours[i % 2 ? count % colours.length : M];
+        else if (M < 2 * colours.length) Z.color = colours[count % colours.length];
+        else Z.color = colours[i % colours.length];
+        Z.fontSize = '10px';
+        Z.visibility = 'visible';
+      }
+      clearTimeout(timers[N]);
+      bang(N);
+    }
+
+    function set_width() {
+      var sw_min = 999999;
+      var sh_min = 999999;
+      if (document.documentElement && document.documentElement.clientWidth) {
+        if (document.documentElement.clientWidth > 0) sw_min = document.documentElement.clientWidth;
+        if (document.documentElement.clientHeight > 0) sh_min = document.documentElement.clientHeight;
+      }
+      if (typeof(self.innerWidth) == 'number' && self.innerWidth) {
+        if (self.innerWidth > 0 && self.innerWidth < sw_min) sw_min = self.innerWidth;
+        if (self.innerHeight > 0 && self.innerHeight < sh_min) sh_min = self.innerHeight;
+      }
+      if (document.body.clientWidth) {
+        if (document.body.clientWidth > 0 && document.body.clientWidth < sw_min) sw_min = document.body.clientWidth;
+        if (document.body.clientHeight > 0 && document.body.clientHeight < sh_min) sh_min = document.body.clientHeight;
+      }
+      if (sw_min == 999999 || sh_min == 999999) {
+        sw_min = 800;
+        sh_min = 600;
+      }
+      swide = sw_min - 7;
+      shigh = sh_min - 7;
+    }
+
+    function set_scroll() {
+      if (typeof(self.pageYOffset) == 'number') {
+        sdown = self.pageYOffset;
+        sleft = self.pageXOffset;
+      } else if (document.body && (document.body.scrollTop || document.body.scrollLeft)) {
+        sdown = document.body.scrollTop;
+        sleft = document.body.scrollLeft;
+      } else if (document.documentElement && (document.documentElement.scrollTop || document.documentElement.scrollLeft)) {
+        sleft = document.documentElement.scrollLeft;
+        sdown = document.documentElement.scrollTop;
+      } else {
+        sdown = 0;
+        sleft = 0;
+      }
+    }
+    // ]]>
+  </script>
+
+  </head><body><div class="maincontainer">
+
+    <!-- FC2 Clap tag starts here -->
+    <a href="//clap.fc2.com/post/bluecaet/?url=https%3A%2F%2Fbluecaet.neocities.org%2Fhome&amp;title=Bluecaet" target="_blank" title="Web Clap by FC2"><img src="https://files.catbox.moe/9l9pjd.png" alt="Web Clap by FC2" style="border:none; margin-top: 10px; margin-left: 615px; position: absolute;"></a>
+    <!-- FC2 Clap tag ends here -->
+
+    <!-- FC2 Counter  Starts here -->
+    <div class="counter">
+
+      <script language="javascript" type="text/javascript" src="//counter1.fc2.com/counter.php?id=40325304&amp;main=1"></script><a href="https://counter.fc2.com/" rel="noopener" target="_blank"><span><nobr><img border="0" src="https://counter1-cdn-ssl.fc2.com/cimg/66/00090966/6.gif" alt="FC2無料カウンター" "="" title="FC2無料カウンター" style="display:inline;margin:0px;padding:0px;border:none;"><img border="0" src="https://counter1-cdn-ssl.fc2.com/cimg/66/00090966/8.gif" alt="FC2無料カウンター" "="" title="FC2無料カウンター" style="display:inline;margin:0px;padding:0px;border:none;"><img border="0" src="https://counter1-cdn-ssl.fc2.com/cimg/66/00090966/2.gif" alt="FC2無料カウンター" "="" title="FC2無料カウンター" style="display:inline;margin:0px;padding:0px;border:none;"><img border="0" src="https://counter1-cdn-ssl.fc2.com/cimg/66/00090966/9.gif" alt="FC2無料カウンター" "="" title="FC2無料カウンター" style="display:inline;margin:0px;padding:0px;border:none;"></nobr><span></span></span></a><script src="https://counter1.fc2.com/counter_js.php?id=40325304&amp;main=1&amp;lang=0&amp;visitor=2" charset="UTF-8"></script><noscript>&lt;img src="//counter1.fc2.com/counter_img.php?id=40325304&amp;main=1" alt="counter" /&gt;</noscript>
+
+    </div>
+    <!-- FC2 Counter  Ends here -->
+
+    <div class="mainborder">
+      <div class="container">
+        <div class="leftcontainer">
+
+          <div class="miniprofile">
+            <span style="background: #eef2fb; border radius: 2px;">about me:</span> eli <img src="https://bluecaet.neocities.org/resources02/staricon.png" class="staricon" alt="star icon">
+            she / her
+            <p><u>19</u> years old , infp (introverted girl) cat and bunny lover , big fan of pastries and polka dots <i>!</i>
+
+            </p><p><a href="https://bluecaet.neocities.org/neighbours" class="bluecaetbutton">
+                add my button
+              </a>
+
+              <img src="https://bluecaet.neocities.org/resources02/hearticon.png" class="hearticon" alt="heart icon">
+
+              <a href="https://bluecaet.neocities.org/neighbours" class="email">
+                email me
+              </a>
+            </p>
+
+          </div>
+
+          <div class="navigation">
+            navigation
+          </div>
+
+          <p><a href="https://bluecaet.neocities.org/" class="button1">
+              home
+            </a> </p>
+
+          <p><a href="https://bluecaet.neocities.org/diary" class="button2">
+              diary
+            </a> </p>
+
+          <p><a href="https://bluecaet.neocities.org/aboutme" class="button3">
+              about me
+            </a> </p>
+
+          <p><a href="https://bluecaet.neocities.org/credits" class="button4">
+              credits
+            </a> </p>
+
+          <p><a href="https://bluecaet.neocities.org/cliques" class="button5">
+              my cliques
+            </a> </p>
+
+          <div class="offsite">
+            off-site
+          </div>
+
+          <p><a href="https://pin.it/4VFrKNFF0" class="button6">
+              pinterest
+            </a> </p>
+
+          <p><a href="https://bluecaet.atabook.org/" class="button7">
+              guestbook
+            </a> </p>
+
+          <div class="statuscafetitle">
+            status cafe
+          </div>
+
+          <div class="statuscontainer">
+            <div class="statusinnercontainer">
+              <!-- start sw-rss-feed code -->
+              <script type="text/javascript">
+                <!-- 
+                rssfeed_url = new Array();
+                rssfeed_url[0] = "https://status.cafe/users/melodies.atom";
+                rssfeed_frame_width = "230";
+                rssfeed_frame_height = "260";
+                rssfeed_scroll = "off";
+                rssfeed_scroll_step = "6";
+                rssfeed_scroll_bar = "on";
+                rssfeed_target = "_blank";
+                rssfeed_font_size = "11";
+                rssfeed_font_face = "";
+                rssfeed_border = "on";
+                rssfeed_css_url = "https://bluecaet.neocities.org/statuscafe.css";
+                rssfeed_title = "off";
+                rssfeed_title_name = "";
+                rssfeed_title_bgcolor = "#3366ff";
+                rssfeed_title_color = "#fff";
+                rssfeed_title_bgimage = "";
+                rssfeed_footer = "off";
+                rssfeed_footer_name = "rss feed";
+                rssfeed_footer_bgcolor = "#fff";
+                rssfeed_footer_color = "#333";
+                rssfeed_footer_bgimage = "";
+                rssfeed_item_title_length = "10";
+                rssfeed_item_title_color = "#666";
+                rssfeed_item_bgcolor = "#fff";
+                rssfeed_item_bgimage = "";
+                rssfeed_item_border_bottom = "on";
+                rssfeed_item_source_icon = "off";
+                rssfeed_item_date = "on";
+                rssfeed_item_description = "on";
+                rssfeed_item_description_length = "160";
+                rssfeed_item_description_color = "#666";
+                rssfeed_item_description_link_color = "#333";
+                rssfeed_item_description_tag = "off";
+                rssfeed_no_items = "0";
+                rssfeed_cache = "70ee5043fef3ac625780ae018d33199c";
+                //
+                -->
+              </script>
+              <script type="text/javascript" src="//feed.surfing-waves.com/js/rss-feed.js"></script><iframe name="rssfeed_frame" width="230" height="260" frameborder="0" src="https://feed.surfing-waves.com/php/rssfeed.php?rssfeed[url][0]=https%3A%2F%2Fstatus.cafe%2Fusers%2Fmelodies.atom&amp;rssfeed[type]=&amp;rssfeed[frame_width]=230&amp;rssfeed[frame_height]=260&amp;rssfeed[scroll]=off&amp;rssfeed[scroll_step]=6&amp;rssfeed[scroll_bar]=on&amp;rssfeed[target]=_blank&amp;rssfeed[font_size]=11&amp;rssfeed[font_face]=&amp;rssfeed[border]=on&amp;rssfeed[css_url]=https%3A%2F%2Fbluecaet.neocities.org%2Fstatuscafe.css&amp;rssfeed[title]=off&amp;rssfeed[title_name]=&amp;rssfeed[title_bgcolor]=%233366ff&amp;rssfeed[title_color]=%23fff&amp;rssfeed[title_bgimage]=&amp;rssfeed[footer]=off&amp;rssfeed[footer_name]=rss%20feed&amp;rssfeed[footer_bgcolor]=%23fff&amp;rssfeed[footer_color]=%23333&amp;rssfeed[footer_bgimage]=&amp;rssfeed[item_bgcolor]=%23fff&amp;rssfeed[item_bgimage]=&amp;rssfeed[item_title_length]=10&amp;rssfeed[item_title_color]=%23666&amp;rssfeed[item_border_bottom]=on&amp;rssfeed[item_source_icon]=off&amp;rssfeed[item_date]=on&amp;rssfeed[item_description]=on&amp;rssfeed[item_description_length]=160&amp;rssfeed[item_description_color]=%23666&amp;rssfeed[item_description_link_color]=%23333&amp;rssfeed[item_description_tag]=off&amp;rssfeed[no_items]=0&amp;rssfeed[cache]=70ee5043fef3ac625780ae018d33199c" marginwidth="0" marginheight="0" vspace="0" hspace="0" scrolling="no" allowtransparency="true"></iframe>
+              <!-- The link below helps keep this service FREE, and helps other people find the SW widget. Please be cool and keep it! Thanks. -->
+              <div style="color:#ccc;font-size:10px; text-align:right; width:230px;">powered by <a href="https://surfing-waves.com" rel="noopener" target="_blank" style="color:#ccc;">Surfing Waves</a></div>
+              <!-- end sw-rss-feed code -->
+            </div>
+          </div>
+          <script src="https://status.cafe/current-status.js?name=melodies" defer=""></script>
+
+          <div class="shrinetitle">
+            shrine
+          </div>
+
+          <div class="shrinecontainer">
+
+            <a target="_blank" href="https://bluecaet.neocities.org/home"><img class="clique" alt="i love rilakkuma" src="https://bluecaet.neocities.org/resources02/iloverilakkumaclique.png" style="position: relative;"></a>
+
+            <a target="_blank" href="https://grrrl.valentinely.cc"><img class="clique" alt="girly badge" src="https://bluecaet.neocities.org/resources02/madebyagirlclique.png" style="position: relative;"></a>
+
+            <a target="_blank" href="https://sweet-pea.neocities.org/"><img class="clique" alt="girly badge" src="https://bluecaet.neocities.org/resources02/girlyclique.png" style="position: relative;"></a>
+
+          </div>
+
+        </div>
+
+        <div class="middlecontainer">
+
+          <div class="headerimg">
+
+            <div class="lace">
+            </div>
+
+            <div class="title">
+              bluecaet's room <i>!</i>
+            </div>
+          </div>
+
+          <div class="clock">02:06:49</div>
+
+          <script>
+            function clock() { // We create a new Date object and assign it to a variable called "time".
+              var time = new Date(),
+                // Access the "getHours" method on the Date object with the dot accessor.
+                hours = time.getHours(),
+                // Access the "getMinutes" method with the dot accessor.
+                minutes = time.getMinutes(),
+                seconds = time.getSeconds();
+              document.querySelectorAll('.clock')[0].innerHTML = harold(hours) + ":" + harold(minutes) + ":" + harold(seconds);
+
+              function harold(standIn) {
+                if (standIn < 10) {
+                  standIn = '0' + standIn
+                }
+                return standIn;
+              }
+            }
+            setInterval(clock, 1000);
+          </script>
+
+          <!-- credits to jubiland (ur so awesome) -->
+          <script>
+            const tooltip = document.getElementById('tooltip');
+            const tooltipElements = document.querySelectorAll('.tooltip-element');
+            let timeout;
+            window.addEventListener('mousemove', (e) => {
+              tooltip.style.top = e.clientY + 'px';
+              tooltip.style.left = e.clientX + 'px';
+            });
+            window.addEventListener('scroll', () => {
+              tooltipElements.forEach(element => {
+                if (tooltip.style.display === 'block') {
+                  tooltip.style.top = (parseFloat(tooltip.style.top) + window.scrollY) + 'px';
+                }
+              });
+            });
+            tooltipElements.forEach(element => {
+              element.addEventListener('mouseover', () => {
+                tooltip.innerHTML = element.getAttribute('data-tooltip');
+                tooltip.style.display = 'block';
+                tooltip.style.top = (event.clientY + window.scrollY) + 'px';
+                tooltip.style.left = event.clientX + 'px';
+                tooltip.style.opacity = 0;
+                setTimeout(() => {
+                  tooltip.style.opacity = 1;
+                }, 10);
+              });
+              element.addEventListener('mouseout', () => {
+                timeout = setTimeout(() => {
+                  tooltip.style.opacity = 0;
+                }, 300);
+              });
+              tooltip.addEventListener('mouseover', () => {
+                clearTimeout(timeout);
+              });
+              tooltip.addEventListener('mouseout', () => {
+                tooltip.style.opacity = 0;
+              });
+            });
+          </script>
+
+          <div class="textboxtitle">
+            information
+          </div>
+
+          <div class="textbox">
+            <div class="text">
+              hi, this is my first ever website and i'm excited to keep on working on it. i started it on the <i>april 2nd 2024</i>. if you'd like you can take a look around, there's not too much happening though, since this website is forever a work in progress. make sure to leave a guestbook comment, if u want. i would love to see who visited my page and what u thought about it. <u> thank you for visiting and come again.</u>
+              <img src="https://bluecaet.neocities.org/resources02/hearticon.png" class="hearticon" alt="heart icon">
+
+            </div>
+          </div>
+
+          <iframe src="https://www5.cbox.ws/box/?boxid=958316&amp;boxtag=" width="200" height="210" allowtransparency="yes" allow="autoplay" frameborder="0" marginheight="0" marginwidth="0" scrolling="auto"></iframe>
+
+          <div class="currentlytitle">
+            eli is currently...
+          </div>
+
+          <div class="reading">
+            reading
+          </div>
+
+          <div class="loving">
+            loving
+          </div>
+
+          <div class="workingon">
+            working on
+          </div>
+
+          <div class="readingansw">
+            she and her cat
+          </div>
+
+          <div class="lovingansw">
+            oat meal bowls
+          </div>
+
+          <div class="workingonansw">
+            reading and crafting more
+          </div>
+
+          <a href="https://bluecaet.neocities.org/gallery" class="gallery">
+            gallery
+          </a>
+
+          <img src="https://bluecaet.neocities.org/resources02/hearticon.png" class="hearticon02" alt="heart icon">
+
+          <a href="https://bluecaet.neocities.org/resoruces" class="resources">
+            resources
+          </a> <p></p>
+
+          <div class="todotitle">
+            to do
+          </div>
+
+          <div class="logstitle">
+            logs
+          </div>
+
+          <div class="todocontainer">
+
+            <div class="todo">
+              <ul>
+                <li>finish site</li>
+                <li>add music</li>
+                <s>
+                  <li>add credits page</li>
+                </s>
+                <s>
+                  <li>make page bigger</li>
+                </s>
+                <s>
+                  <li>add cliques page</li>
+                </s>
+
+              </ul>
+
+            </div>
+
+            <div class="logs">
+
+              <ul>
+                <li>[12.09.25] recoloured my page! fixed some things, added different pixels.</li>
+                <li>[01.09.25] cleaned everything up, added more links (about me page, neighbours page). fixed bugs.</li>
+                <li>[22.08.25] fixed bug.</li>
+                <li>[20.08.25] added status cafe, button for my button.</li>
+              </ul>
+
+            </div>
+          </div>
+
+          <img src="https://bluecaet.neocities.org/resources02/calendarico.png" class="calendaricon" alt="calendar">
+
+          <div class="calendertitle">
+            calendar
+          </div>
+
+          <div class="calendaroutline">
+          </div>
+
+          <div class="calendar">
+            <script language="JavaScript">
+              monthnames = new Array(
+                "January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"
+              );
+              var linkcount = 0;
+
+              function addlink(month, day, href) {
+                var entry = new Array(3);
+                entry[0] = month;
+                entry[1] = day;
+                entry[2] = href;
+                this[linkcount++] = entry;
+              }
+              Array.prototype.addlink = addlink;
+              linkdays = new Array();
+              monthdays = new Array(12);
+              monthdays[0] = 31;
+              monthdays[1] = 28;
+              monthdays[2] = 31;
+              monthdays[3] = 30;
+              monthdays[4] = 31;
+              monthdays[5] = 30;
+              monthdays[6] = 31;
+              monthdays[7] = 31;
+              monthdays[8] = 30;
+              monthdays[9] = 31;
+              monthdays[10] = 30;
+              monthdays[11] = 31;
+              todayDate = new Date();
+              thisday = todayDate.getDay();
+              thisday = (thisday + 6) % 7; // Adjust so Monday is 0
+              thismonth = todayDate.getMonth();
+              thisdate = todayDate.getDate();
+              thisyear = todayDate.getFullYear();
+              // Leap year check
+              if (((thisyear % 4 == 0) && !(thisyear % 100 == 0)) || (thisyear % 400 == 0)) {
+                monthdays[1]++;
+              }
+              // Determine the day of week for the 1st of this month
+              var firstDay = new Date(thisyear, thismonth, 1).getDay();
+              var startspaces = (firstDay + 6) % 7; // Shift so Monday = 0
+              document.write("<table border=0 bgcolor=#fffdfd bordercolor=grey>");
+              document.write("<tr><td colspan=7><center><font color='#bf978c; font-family: MS UI GOTHIC;'><div class='header'>" +
+                monthnames[thismonth] + " " + thisyear +
+                "</div></font></center></td></tr>");
+              // Day of week headers (Monday first)
+              document.write("<tr>");
+              document.write("<td align=center class='day-of-week'>M</td>");
+              document.write("<td align=center class='day-of-week'>T</td>");
+              document.write("<td align=center class='day-of-week'>W</td>");
+              document.write("<td align=center class='day-of-week'>T</td>");
+              document.write("<td align=center class='day-of-week'>F</td>");
+              document.write("<td align=center class='weekend'>S</td>");
+              document.write("<td align=center class='weekend'>S</td>");
+              document.write("</tr>");
+              document.write("<tr>");
+              for (s = 0; s < startspaces; s++) {
+                document.write("<td> </td>");
+              }
+              count = 1;
+              while (count <= monthdays[thismonth]) {
+                for (b = startspaces; b < 7; b++) {
+                  if (count > monthdays[thismonth]) break;
+                  linktrue = false;
+                  document.write("<td>");
+                  for (c = 0; c < linkdays.length; c++) {
+                    if (linkdays[c] != null && linkdays[c][0] == thismonth + 1 && linkdays[c][1] == count) {
+                      document.write("<a href=\"" + linkdays[c][2] + "\">");
+                      linktrue = true;
+                    }
+                  }
+                  if (count == thisdate) {
+                    document.write("<font color='orange; font-family: MS UI GOTHIC;'><strong>");
+                  }
+                  document.write(count);
+                  if (count == thisdate) {
+                    document.write("</strong></font>");
+                  }
+                  if (linktrue) document.write("</a>");
+                  document.write("</td>");
+                  count++;
+                }
+                document.write("</tr><tr>");
+                startspaces = 0;
+              }
+              document.write("</tr></table>");
+            </script><table border="0" bgcolor="#fffdfd" bordercolor="grey"><tbody><tr><td colspan="7"><center><font color="#bf978c; font-family: MS UI GOTHIC;"><div class="header">October 2026</div></font></center></td></tr><tr><td align="center" class="day-of-week">M</td><td align="center" class="day-of-week">T</td><td align="center" class="day-of-week">W</td><td align="center" class="day-of-week">T</td><td align="center" class="day-of-week">F</td><td align="center" class="weekend">S</td><td align="center" class="weekend">S</td></tr><tr><td> </td><td> </td><td> </td><td>1</td><td>2</td><td>3</td><td>4</td></tr><tr><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td></tr><tr><td>12</td><td><font color="orange; font-family: MS UI GOTHIC;"><strong>13</strong></font></td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td></tr><tr><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td></tr><tr><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td><td>31</td></tr><tr></tr></tbody></table>
+          </div>
+
+        </div>
+        <div class="credits">
+          made by
+          <i><a href="https://neocities.org/site/bluecaet" class="creditlink">
+              bluecaet
+            </a></i>
+          with ♡
+        </div>
+
+      </div>
+    </div>
+  </div>
+  
+
+<div style="font-style: normal; font-variant-caps: normal; font-weight: normal; font-stretch: normal; font-size: 10px; line-height: normal; font-family: monospace; font-size-adjust: none; font-kerning: auto; font-variant-alternates: normal; font-variant-ligatures: normal; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-position: normal; font-feature-settings: normal; font-optical-sizing: auto; font-variation-settings: normal; position: absolute; background-color: transparent; visibility: hidden; z-index: 101; color: rgb(179, 138, 93);">+</div><div style="font-style: normal; font-variant-caps: normal; font-weight: normal; font-stretch: normal; font-size: 10px; line-height: normal; font-family: monospace; font-size-adjust: none; font-kerning: auto; font-variant-alternates: normal; font-variant-ligatures: normal; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-position: normal; font-feature-settings: normal; font-optical-sizing: auto; font-variation-settings: normal; position: absolute; background-color: transparent; visibility: hidden; z-index: 101; color: rgb(179, 138, 93);">+</div><div style="font-style: normal; font-variant-caps: normal; font-weight: normal; font-stretch: normal; font-size: 10px; line-height: normal; font-family: monospace; font-size-adjust: none; font-kerning: auto; font-variant-alternates: normal; font-variant-ligatures: normal; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-position: normal; font-feature-settings: normal; font-optical-sizing: auto; font-variation-settings: normal; position: absolute; background-color: transparent; visibility: hidden; z-index: 101; color: rgb(179, 138, 93);">+</div><div style="font-style: normal; font-variant-caps: normal; font-weight: normal; font-stretch: normal; font-size: 13px; line-height: normal; font-family: monospace; font-size-adjust: none; font-kerning: auto; font-variant-alternates: normal; font-variant-ligatures: normal; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-position: normal; font-feature-settings: normal; font-optical-sizing: auto; font-variation-settings: normal; position: absolute; background-color: transparent; visibility: hidden; z-index: 101;">+</div><div style="font-style: normal; font-variant-caps: normal; font-weight: normal; font-stretch: normal; font-size: 13px; line-height: normal; font-family: monospace; font-size-adjust: none; font-kerning: auto; font-variant-alternates: normal; font-variant-ligatures: normal; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-position: normal; font-feature-settings: normal; font-optical-sizing: auto; font-variation-settings: normal; position: absolute; background-color: transparent; visibility: hidden; z-index: 101;">+</div><div style="font-style: normal; font-variant-caps: normal; font-weight: normal; font-stretch: normal; font-size: 13px; line-height: normal; font-family: monospace; font-size-adjust: none; font-kerning: auto; font-variant-alternates: normal; font-variant-ligatures: normal; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-position: normal; font-feature-settings: normal; font-optical-sizing: auto; font-variation-settings: normal; position: absolute; background-color: transparent; visibility: hidden; z-index: 101;">+</div><div style="font-style: normal; font-variant-caps: normal; font-weight: normal; font-stretch: normal; font-size: 13px; line-height: normal; font-family: monospace; font-size-adjust: none; font-kerning: auto; font-variant-alternates: normal; font-variant-ligatures: normal; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-position: normal; font-feature-settings: normal; font-optical-sizing: auto; font-variation-settings: normal; position: absolute; background-color: transparent; visibility: hidden; z-index: 101;">+</div><div style="font-style: normal; font-variant-caps: normal; font-weight: normal; font-stretch: normal; font-size: 13px; line-height: normal; font-family: monospace; font-size-adjust: none; font-kerning: auto; font-variant-alternates: normal; font-variant-ligatures: normal; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-position: normal; font-feature-settings: normal; font-optical-sizing: auto; font-variation-settings: normal; position: absolute; background-color: transparent; visibility: hidden; z-index: 101;">+</div><div style="font-style: normal; font-variant-caps: normal; font-weight: normal; font-stretch: normal; font-size: 13px; line-height: normal; font-family: monospace; font-size-adjust: none; font-kerning: auto; font-variant-alternates: normal; font-variant-ligatures: normal; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-position: normal; font-feature-settings: normal; font-optical-sizing: auto; font-variation-settings: normal; position: absolute; background-color: transparent; visibility: hidden; z-index: 101;">+</div></body></html>
